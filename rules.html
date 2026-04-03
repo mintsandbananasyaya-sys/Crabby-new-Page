@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Crabby's Civilization Experiments — Rules</title>
+<style>
+:root{
+  --bg:#020814;
+  --bg2:#051328;
+  --panel:rgba(7,18,40,.84);
+  --panel2:rgba(255,255,255,.04);
+  --text:#f5fbff;
+  --muted:#a9bdd6;
+  --accent:#08d2ff;
+  --accent2:#6be8ff;
+  --danger:#ff6f7d;
+  --gold:#ffca73;
+  --green:#7cffc0;
+  --shadow:0 24px 70px rgba(0,0,0,.48);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:Inter,Arial,Helvetica,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at top,rgba(8,210,255,.09),transparent 24%),
+    linear-gradient(180deg,#020814 0%,#041226 45%,#020814 100%);
+  overflow-x:hidden;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background-image:
+    radial-gradient(circle at 8% 18%, rgba(8,210,255,.85) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 22% 76%, rgba(8,210,255,.8) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 48% 12%, rgba(8,210,255,.8) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 65% 82%, rgba(8,210,255,.8) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 84% 26%, rgba(8,210,255,.8) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 94% 64%, rgba(8,210,255,.76) 0 1px, transparent 1.5px);
+  z-index:-4;
+}
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 8% 25%, transparent 0 120px, rgba(255,255,255,.03) 121px 124px, transparent 125px 170px, rgba(255,255,255,.02) 171px 174px, transparent 175px),
+    radial-gradient(circle at 28% 78%, transparent 0 160px, rgba(255,255,255,.028) 161px 164px, transparent 165px 225px, rgba(255,255,255,.018) 226px 229px, transparent 230px),
+    radial-gradient(circle at 58% 18%, transparent 0 180px, rgba(255,255,255,.022) 181px 184px, transparent 185px 250px, rgba(255,255,255,.016) 251px 254px, transparent 255px),
+    radial-gradient(circle at 88% 34%, transparent 0 130px, rgba(255,255,255,.026) 131px 134px, transparent 135px 185px, rgba(255,255,255,.018) 186px 189px, transparent 190px),
+    radial-gradient(circle at 86% 82%, transparent 0 130px, rgba(255,255,255,.026) 131px 134px, transparent 135px 185px, rgba(255,255,255,.018) 186px 189px, transparent 190px);
+  z-index:-3;
+  opacity:.95;
+}
+.progress-bar{
+  position:fixed;
+  top:0;left:0;
+  width:0%;height:4px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  box-shadow:0 0 20px rgba(8,210,255,.8);
+  z-index:100;
+}
+.container{width:min(calc(100% - 2rem),1360px);margin:0 auto}
+.site-header{
+  position:fixed;inset:0 0 auto 0;z-index:60;
+  background:linear-gradient(180deg,rgba(0,0,0,.84),rgba(0,0,0,.42));
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,.06)
+}
+.nav{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{font-weight:900;letter-spacing:.04em;text-transform:uppercase;line-height:1;font-size:.98rem}
+.brand span{display:block;color:var(--accent);text-shadow:0 0 14px rgba(8,210,255,.45)}
+.nav-links{display:flex;align-items:center;gap:1.1rem;flex-wrap:wrap;justify-content:center}
+.nav-links a{font-weight:800;font-size:.93rem;color:var(--muted);transition:.2s}
+.nav-links a:hover,.nav-links a.active{color:var(--accent);text-shadow:0 0 12px rgba(8,210,255,.45)}
+.nav-cta{padding:.8rem 1rem;border:1px solid rgba(8,210,255,.65);border-radius:14px;color:var(--accent);font-weight:800;background:rgba(8,210,255,.07);box-shadow:inset 0 0 0 1px rgba(255,255,255,.02),0 0 20px rgba(8,210,255,.08)}
+.hero{
+  position:relative;
+  padding:8.6rem 0 3rem;
+  text-align:center;
+  overflow:hidden;
+}
+.hero::before{
+  content:"";
+  position:absolute;inset:0;
+  background:
+    radial-gradient(circle at 50% 12%, rgba(255,202,115,.22), transparent 16%),
+    linear-gradient(180deg, rgba(8,210,255,.04), transparent 45%);
+  pointer-events:none;
+}
+.eyebrow{
+  display:inline-flex;
+  padding:.45rem .82rem;
+  border-radius:999px;
+  background:rgba(8,210,255,.08);
+  border:1px solid rgba(8,210,255,.22);
+  color:var(--accent);
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  font-size:.78rem;
+  margin-bottom:1rem;
+}
+.hero h1{margin:0;font-size:clamp(3rem,7vw,5.7rem);line-height:.94;letter-spacing:-.06em;font-weight:1000}
+.hero h1 span{color:var(--accent);text-shadow:0 0 10px rgba(8,210,255,.95),0 0 26px rgba(8,210,255,.7),0 0 58px rgba(8,210,255,.26)}
+.hero p{max-width:780px;margin:1rem auto 0;color:var(--muted);line-height:1.85;font-size:1.04rem}
+.hero-meta{margin:1.6rem auto 0;display:flex;justify-content:center;gap:.9rem;flex-wrap:wrap}
+.meta-chip{padding:.82rem 1rem;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--muted);min-width:155px}
+.meta-chip strong{display:block;color:var(--text);margin-bottom:.15rem}
+.layout{display:grid;grid-template-columns:280px 1fr;gap:1.4rem;align-items:start;padding-bottom:3rem}
+.sidebar{
+  position:sticky;top:96px;
+  padding:1rem;
+  border-radius:24px;
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.025));
+  border:1px solid rgba(8,210,255,.16);
+  box-shadow:var(--shadow);
+}
+.sidebar h3{margin:.2rem 0 .9rem;font-size:1.05rem}
+.sidebar a{
+  display:block;
+  padding:.82rem .9rem;
+  margin-bottom:.6rem;
+  border-radius:14px;
+  color:var(--muted);
+  font-weight:700;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.06);
+  transition:.2s;
+}
+.sidebar a:hover{color:var(--accent);border-color:rgba(8,210,255,.2);transform:translateX(3px)}
+.sidebar-note{
+  margin-top:.9rem;
+  padding:.95rem;
+  border-radius:16px;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.06);
+  color:var(--muted);
+  line-height:1.65;
+  font-size:.94rem;
+}
+.main-content{min-width:0}
+.rules-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.2rem}
+.rule{
+  position:relative;
+  overflow:hidden;
+  min-height:100%;
+  border-radius:24px;
+  background:
+    linear-gradient(180deg, rgba(5,18,42,.84), rgba(3,12,28,.94)),
+    linear-gradient(135deg, rgba(8,210,255,.08), transparent 55%);
+  border:1px solid rgba(8,210,255,.18);
+  box-shadow:var(--shadow);
+  padding:1.45rem;
+  transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+}
+.rule:hover{
+  transform:translateY(-5px);
+  border-color:rgba(8,210,255,.32);
+  box-shadow:0 28px 75px rgba(8,210,255,.1),0 20px 60px rgba(0,0,0,.48);
+}
+.rule::before{
+  content:"";
+  position:absolute;inset:0;
+  background:linear-gradient(135deg, rgba(8,210,255,.12), transparent 45%);
+  pointer-events:none;
+}
+.rule::after{
+  content:"";
+  position:absolute;
+  width:160px;height:160px;border-radius:50%;
+  right:-50px;top:-50px;
+  background:radial-gradient(circle, rgba(8,210,255,.1), transparent 70%);
+  pointer-events:none;
+}
+.rule > *{position:relative;z-index:1}
+.rule-head{display:flex;align-items:center;gap:.9rem;margin-bottom:.9rem}
+.rule-icon{
+  width:52px;height:52px;border-radius:16px;
+  display:grid;place-items:center;
+  background:rgba(8,210,255,.08);
+  border:1px solid rgba(8,210,255,.22);
+  color:var(--accent);font-size:1.3rem;
+  box-shadow:0 10px 24px rgba(8,210,255,.12);
+}
+.rule h2{margin:0;font-size:1.22rem;letter-spacing:-.02em}
+.rule-sub{margin:.18rem 0 0;color:var(--muted);font-size:.92rem}
+.rule ul{margin:0;padding-left:1.15rem;color:var(--muted);line-height:1.8}
+.rule li{margin:.34rem 0}
+.rule li::marker{color:var(--accent)}
+.notice-row{display:grid;grid-template-columns:1.1fr .9fr;gap:1.2rem;margin-top:1.2rem}
+.warning,
+.enforcement{
+  position:relative;
+  overflow:hidden;
+  padding:1.5rem;
+  border-radius:24px;
+  box-shadow:var(--shadow);
+}
+.warning{
+  border:1px solid rgba(255,111,125,.28);
+  background:linear-gradient(135deg, rgba(255,111,125,.12), rgba(0,0,0,.42));
+}
+.enforcement{
+  border:1px solid rgba(255,202,115,.22);
+  background:linear-gradient(135deg, rgba(255,202,115,.1), rgba(255,255,255,.03));
+}
+.warning::before,.enforcement::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(135deg, rgba(255,255,255,.05), transparent 45%);
+}
+.warning > *,.enforcement > *{position:relative;z-index:1}
+.warning h3,.enforcement h3{margin:0 0 .7rem;font-size:1.2rem}
+.warning p,.enforcement p{margin:.45rem 0;color:var(--muted);line-height:1.75}
+.warning strong{color:var(--danger)}
+.enforcement strong{color:var(--gold)}
+.bottom-cta{
+  margin-top:1.2rem;
+  padding:1.6rem;
+  border-radius:26px;
+  background:linear-gradient(135deg, rgba(8,210,255,.12), rgba(255,202,115,.08)), rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:var(--shadow);
+  text-align:center;
+}
+.bottom-cta h3{margin:0 0 .7rem;font-size:1.5rem;letter-spacing:-.03em}
+.bottom-cta p{margin:0 auto;max-width:720px;color:var(--muted);line-height:1.8}
+.footer{text-align:center;color:var(--muted);padding:2rem 0 3rem}
+@media (max-width: 1080px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{position:relative;top:0}
+}
+@media (max-width: 760px){
+  .nav{padding:.9rem 0 1rem;flex-direction:column;align-items:flex-start}
+  .nav-links{justify-content:flex-start}
+  .nav-cta{width:100%;text-align:center}
+  .rules-grid,.notice-row{grid-template-columns:1fr}
+  .hero-meta{flex-direction:column;align-items:center}
+}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="index.html">Crabby's<span>Civilization Experiments</span></a>
+    <nav class="nav-links">
+      <a href="index.html">Index</a>
+      <a href="home.html">Home</a>
+      <a href="apply.html">Apply</a>
+      <a href="staff.html">Staff</a>
+      <a class="active" href="rules.html">Rules</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+    <a class="nav-cta" href="#rule-1">Read Rules</a>
+  </div>
+</header>
+
+<div class="container">
+  <section class="hero">
+    <div class="eyebrow">Official server standards</div>
+    <h1>Server <span>Rules</span></h1>
+    <p>Please read all rules carefully before participating. These standards exist to keep the server fair, respectful, safe, and enjoyable for everyone taking part in Crabby's Civilization Experiments.</p>
+    <div class="hero-meta">
+      <div class="meta-chip"><strong>9 Core Rules</strong><span>Community and event standards</span></div>
+      <div class="meta-chip"><strong>Zero Tolerance</strong><span>Severe behavior leads to removal</span></div>
+      <div class="meta-chip"><strong>Escalation System</strong><span>Warning → Mute → Ban</span></div>
+    </div>
+  </section>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <h3>Quick Navigation</h3>
+      <a href="#rule-1">I. Respect & Conduct</a>
+      <a href="#rule-2">II. Clean & Appropriate Chat</a>
+      <a href="#rule-3">III. No Spam or Advertising</a>
+      <a href="#rule-4">IV. Privacy & Safety</a>
+      <a href="#rule-5">V. Voice Chat Conduct</a>
+      <a href="#rule-6">VI. Names, Skins & Profiles</a>
+      <a href="#rule-7">VII. Use Common Sense</a>
+      <a href="#rule-8">VIII. Civ Event Rules</a>
+      <a href="#rule-9">IX. Zero Tolerance Behavior</a>
+      <a href="#enforcement">Enforcement</a>
+      <div class="sidebar-note">
+        These rules apply across the server and related participation spaces. Respect the staff team, respect other players, and keep the environment fair and appropriate.
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <section class="rules-grid">
+        <article class="rule" id="rule-1">
+          <div class="rule-head">
+            <div class="rule-icon">🛡️</div>
+            <div>
+              <h2>I. Respect & Conduct</h2>
+              <p class="rule-sub">Basic behavior standards for everyone.</p>
+            </div>
+          </div>
+          <ul>
+            <li>Treat all players with respect at all times.</li>
+            <li>Harassment, insults, discrimination, or toxicity are not allowed.</li>
+            <li>Keep disagreements civil and in-character when possible.</li>
+          </ul>
+        </article>
+
+        <article class="rule" id="rule-2">
+          <div class="rule-head">
+            <div class="rule-icon">💬</div>
+            <div>
+              <h2>II. Clean & Appropriate Chat</h2>
+              <p class="rule-sub">Keep public communication appropriate.</p>
+            </div>
+          </div>
+          <ul>
+            <li>No hate speech, slurs, or offensive language.</li>
+            <li>No sexual content or implications, especially involving minors.</li>
+            <li>Political topics, personal drama, and controversial subjects must stay out of public chat.</li>
+          </ul>
+        </article>
+
+        <article class="rule" id="rule-3">
+          <div class="rule-head">
+            <div class="rule-icon">📢</div>
+            <div>
+              <h2>III. No Spam or Advertising</h2>
+              <p class="rule-sub">Avoid clutter and unauthorized promotion.</p>
+            </div>
+          </div>
+          <ul>
+            <li>Do not flood chat with messages, symbols, or noise.</li>
+            <li>No advertising in public chat or private messages without staff approval.</li>
+            <li>Consult an Admin through tickets before promoting anything.</li>
+          </ul>
+        </article>
+
+        <article class="rule" id="rule-4">
+          <div class="rule-head">
+            <div class="rule-icon">🔒</div>
+            <div>
+              <h2>IV. Privacy & Safety</h2>
+              <p class="rule-sub">Protect personal information and boundaries.</p>
+            </div>
+          </div>
+          <ul>
+            <li>Do not share personal information, private messages, or identities without permission.</li>
+            <li>Respect everyone's privacy.</li>
+          </ul>
+        </article>
+
+        <article class="rule" id="rule-5">
+          <div class="rule-head">
+            <div class="rule-icon">🎙️</div>
+            <div>
+              <h2>V. Voice Chat Conduct</h2>
+              <p class="rule-sub">Keep voice channels calm and usable.</p>
+            </div>
+          </div>
+          <ul>
+            <li>No screaming, mic abuse, or disruptive noises.</li>
+            <li>Keep voice chat calm and respectful.</li>
+          </ul>
+        </article>
+
+        <article class="rule" id="rule-6">
+          <div class="rule-head">
+            <div class="rule-icon">🧾</div>
+            <div>
+              <h2>VI. Names, Skins & Profiles</h2>
+              <p class="rule-sub">Accounts and profiles must remain appropriate.</p>
+            </div>
+          </div>
+          <ul>
+            <li>Usernames, skins, avatars, and statuses must be appropriate.</li>
+            <li>No impersonating staff or other players.</li>
+          </ul>
+        </article>
+
+        <article class="rule" id="rule-7">
+          <div class="rule-head">
+            <div class="rule-icon">🧠</div>
+            <div>
+              <h2>VII. Use Common Sense</h2>
+              <p class="rule-sub">Not every issue can be listed in exact detail.</p>
+            </div>
+          </div>
+          <ul>
+            <li>Not every rule can be listed.</li>
+            <li>If something feels wrong or unfair, do not do it.</li>
+          </ul>
+        </article>
+
+        <article class="rule" id="rule-8">
+          <div class="rule-head">
+            <div class="rule-icon">⚔️</div>
+            <div>
+              <h2>VIII. Civ Event Rules</h2>
+              <p class="rule-sub">Event-specific restrictions and lore standards.</p>
+            </div>
+          </div>
+          <ul>
+            <li>No alliances, recruiting, peace treaties, bounties, or wars before events officially begin.</li>
+            <li>Lore actions should happen during the event.</li>
+            <li>Do not use pre-made large Discord servers to mass recruit players.</li>
+            <li>Recruiting should be done in-character and within the lore.</li>
+          </ul>
+        </article>
+
+        <article class="rule" id="rule-9" style="grid-column:1 / -1; border-color:rgba(255,111,125,.25); background:linear-gradient(180deg, rgba(40,8,18,.72), rgba(18,5,12,.92)), linear-gradient(135deg, rgba(255,111,125,.08), transparent 55%);">
+          <div class="rule-head">
+            <div class="rule-icon" style="color:var(--danger); border-color:rgba(255,111,125,.25); background:rgba(255,111,125,.08);">⛔</div>
+            <div>
+              <h2>IX. Zero Tolerance Behavior</h2>
+              <p class="rule-sub">Severe behavior results in immediate action.</p>
+            </div>
+          </div>
+          <ul>
+            <li>Any predatory, sexual, or highly inappropriate behavior will result in immediate removal with no warnings.</li>
+          </ul>
+        </article>
+      </section>
+
+      <section class="notice-row" id="enforcement">
+        <div class="warning">
+          <h3><strong>Severe Violations</strong></h3>
+          <p>Predatory behavior, severe harassment, cheating, impersonation, or similarly serious actions may lead to immediate punishment without the normal escalation process.</p>
+          <p>The safety of the community comes first.</p>
+        </div>
+
+        <div class="enforcement">
+          <h3><strong>Rule Enforcement</strong></h3>
+          <p>Rule breaking usually follows escalation: <strong>warning → mute → ban</strong>.</p>
+          <p>Certain actions, including impersonation, predatory behavior, or cheating, may result in instant bans.</p>
+          <p>Carry yourself responsibly and use common sense.</p>
+        </div>
+      </section>
+
+      <section class="bottom-cta">
+        <h3>Read them, follow them, and keep the server worth being part of.</h3>
+        <p>These rules are here to protect the community, preserve the quality of the experiment, and make sure every season stays enjoyable, fair, and safe for everyone involved.</p>
+      </section>
+    </main>
+  </div>
+
+  <div class="footer">
+    <p>Crabby's Civilization Experiments — Rules Page</p>
+  </div>
+</div>
+
+<script>
+const progressBar = document.getElementById('progressBar');
+const updateProgress = () => {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+  progressBar.style.width = progress + '%';
+};
+window.addEventListener('scroll', updateProgress);
+updateProgress();
+</script>
+</body>
+</html>

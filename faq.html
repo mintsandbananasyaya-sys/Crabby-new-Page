@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FAQ — Crabby's Civilization Experiments</title>
+<style>
+:root{
+  --bg:#020814;
+  --bg2:#041226;
+  --panel:rgba(6,18,40,.84);
+  --panel2:rgba(255,255,255,.04);
+  --text:#f5fbff;
+  --muted:#a9bdd6;
+  --accent:#08d2ff;
+  --accent2:#6be8ff;
+  --gold:#ffca73;
+  --green:#7cffc0;
+  --purple:#b089ff;
+  --shadow:0 24px 70px rgba(0,0,0,.48);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:Inter,Arial,Helvetica,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at top,rgba(8,210,255,.09),transparent 24%),
+    linear-gradient(180deg,#020814 0%,#041226 45%,#020814 100%);
+  overflow-x:hidden;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background-image:
+    radial-gradient(circle at 8% 18%, rgba(8,210,255,.85) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 22% 76%, rgba(8,210,255,.8) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 48% 12%, rgba(8,210,255,.8) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 65% 82%, rgba(8,210,255,.8) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 84% 26%, rgba(8,210,255,.8) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 94% 64%, rgba(8,210,255,.76) 0 1px, transparent 1.5px);
+  z-index:-4;
+}
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 8% 25%, transparent 0 120px, rgba(255,255,255,.03) 121px 124px, transparent 125px 170px, rgba(255,255,255,.02) 171px 174px, transparent 175px),
+    radial-gradient(circle at 28% 78%, transparent 0 160px, rgba(255,255,255,.028) 161px 164px, transparent 165px 225px, rgba(255,255,255,.018) 226px 229px, transparent 230px),
+    radial-gradient(circle at 58% 18%, transparent 0 180px, rgba(255,255,255,.022) 181px 184px, transparent 185px 250px, rgba(255,255,255,.016) 251px 254px, transparent 255px),
+    radial-gradient(circle at 88% 34%, transparent 0 130px, rgba(255,255,255,.026) 131px 134px, transparent 135px 185px, rgba(255,255,255,.018) 186px 189px, transparent 190px),
+    radial-gradient(circle at 86% 82%, transparent 0 130px, rgba(255,255,255,.026) 131px 134px, transparent 135px 185px, rgba(255,255,255,.018) 186px 189px, transparent 190px);
+  z-index:-3;
+  opacity:.95;
+}
+.progress-bar{
+  position:fixed;top:0;left:0;width:0;height:4px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  box-shadow:0 0 20px rgba(8,210,255,.8);
+  z-index:120;
+}
+.container{width:min(calc(100% - 2rem),1380px);margin:0 auto}
+.site-header{
+  position:fixed;inset:0 0 auto 0;z-index:60;
+  background:linear-gradient(180deg,rgba(0,0,0,.84),rgba(0,0,0,.42));
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,.06)
+}
+.nav{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{font-weight:900;letter-spacing:.04em;text-transform:uppercase;line-height:1;font-size:.98rem}
+.brand span{display:block;color:var(--accent);text-shadow:0 0 14px rgba(8,210,255,.45)}
+.nav-links{display:flex;align-items:center;gap:1.1rem;flex-wrap:wrap;justify-content:center}
+.nav-links a{font-weight:800;font-size:.93rem;color:var(--muted);transition:.2s}
+.nav-links a:hover,.nav-links a.active{color:var(--accent);text-shadow:0 0 12px rgba(8,210,255,.45)}
+.nav-cta{padding:.8rem 1rem;border:1px solid rgba(8,210,255,.65);border-radius:14px;color:var(--accent);font-weight:800;background:rgba(8,210,255,.07);box-shadow:inset 0 0 0 1px rgba(255,255,255,.02),0 0 20px rgba(8,210,255,.08)}
+.hero{
+  position:relative;
+  padding:8.6rem 0 3rem;
+  text-align:center;
+  overflow:hidden;
+}
+.hero::before{
+  content:"";
+  position:absolute;inset:0;
+  background:
+    radial-gradient(circle at 50% 12%, rgba(255,202,115,.22), transparent 16%),
+    linear-gradient(180deg, rgba(8,210,255,.04), transparent 45%);
+  pointer-events:none;
+}
+.eyebrow{
+  display:inline-flex;
+  padding:.45rem .82rem;
+  border-radius:999px;
+  background:rgba(8,210,255,.08);
+  border:1px solid rgba(8,210,255,.22);
+  color:var(--accent);
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  font-size:.78rem;
+  margin-bottom:1rem;
+}
+.hero h1{margin:0;font-size:clamp(3rem,7vw,5.7rem);line-height:.94;letter-spacing:-.06em;font-weight:1000}
+.hero h1 span{color:var(--accent);text-shadow:0 0 10px rgba(8,210,255,.95),0 0 26px rgba(8,210,255,.7),0 0 58px rgba(8,210,255,.26)}
+.hero p{max-width:780px;margin:1rem auto 0;color:var(--muted);line-height:1.85;font-size:1.04rem}
+.hero-meta{margin:1.6rem auto 0;display:flex;justify-content:center;gap:.9rem;flex-wrap:wrap}
+.meta-chip{padding:.82rem 1rem;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--muted);min-width:155px}
+.meta-chip strong{display:block;color:var(--text);margin-bottom:.15rem}
+.layout{display:grid;grid-template-columns:300px 1fr;gap:1.4rem;align-items:start;padding-bottom:3rem}
+.sidebar{
+  position:sticky;top:96px;
+  padding:1rem;
+  border-radius:24px;
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.025));
+  border:1px solid rgba(8,210,255,.16);
+  box-shadow:var(--shadow);
+}
+.sidebar h3{margin:.2rem 0 .9rem;font-size:1.05rem}
+.search-box{margin-bottom:1rem}
+.search-box input{
+  width:100%;padding:.95rem 1rem;border-radius:14px;
+  border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:var(--text);
+  outline:none;
+}
+.search-box input:focus{border-color:rgba(8,210,255,.35);box-shadow:0 0 0 3px rgba(8,210,255,.08)}
+.filter-buttons{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1rem}
+.filter-btn{
+  padding:.75rem .8rem;border-radius:12px;border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.03);color:var(--muted);font-weight:800;cursor:pointer;transition:.2s
+}
+.filter-btn:hover,.filter-btn.active{color:var(--accent);border-color:rgba(8,210,255,.24);background:rgba(8,210,255,.07)}
+.sidebar a{
+  display:block;padding:.82rem .9rem;margin-bottom:.6rem;border-radius:14px;color:var(--muted);font-weight:700;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);transition:.2s;
+}
+.sidebar a:hover{color:var(--accent);border-color:rgba(8,210,255,.2);transform:translateX(3px)}
+.sidebar-note{
+  margin-top:.9rem;padding:.95rem;border-radius:16px;background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.06);color:var(--muted);line-height:1.65;font-size:.94rem;
+}
+.main-content{min-width:0}
+.faq-grid{display:grid;grid-template-columns:1fr;gap:1rem}
+.faq-card{
+  position:relative;overflow:hidden;border-radius:24px;
+  background:
+    linear-gradient(180deg, rgba(5,18,42,.84), rgba(3,12,28,.94)),
+    linear-gradient(135deg, rgba(8,210,255,.08), transparent 55%);
+  border:1px solid rgba(8,210,255,.18);
+  box-shadow:var(--shadow);
+  transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+}
+.faq-card:hover{transform:translateY(-4px);border-color:rgba(8,210,255,.32);box-shadow:0 28px 75px rgba(8,210,255,.1),0 20px 60px rgba(0,0,0,.48)}
+.faq-card::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg, rgba(8,210,255,.12), transparent 45%);pointer-events:none}
+.faq-card > *{position:relative;z-index:1}
+.faq-card[data-category="rules"]{border-color:rgba(255,202,115,.18);background:linear-gradient(180deg, rgba(28,22,8,.65), rgba(16,12,5,.9)),linear-gradient(135deg, rgba(255,202,115,.08), transparent 55%)}
+.faq-card[data-category="tech"]{border-color:rgba(176,137,255,.18);background:linear-gradient(180deg, rgba(18,12,34,.72), rgba(10,8,20,.92)),linear-gradient(135deg, rgba(176,137,255,.08), transparent 55%)}
+.faq-card[data-category="events"]{border-color:rgba(124,255,192,.18);background:linear-gradient(180deg, rgba(6,28,22,.68), rgba(4,16,12,.92)),linear-gradient(135deg, rgba(124,255,192,.08), transparent 55%)}
+.faq-card.hidden{display:none}
+.question{
+  padding:1.2rem 1.25rem;cursor:pointer;font-weight:800;display:flex;justify-content:space-between;align-items:center;gap:1rem
+}
+.question-left{display:flex;align-items:flex-start;gap:.9rem}
+.q-icon{
+  width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:1.15rem;
+  background:rgba(8,210,255,.08);border:1px solid rgba(8,210,255,.22);color:var(--accent);flex-shrink:0
+}
+.faq-card[data-category="rules"] .q-icon{background:rgba(255,202,115,.08);border-color:rgba(255,202,115,.22);color:var(--gold)}
+.faq-card[data-category="tech"] .q-icon{background:rgba(176,137,255,.08);border-color:rgba(176,137,255,.22);color:var(--purple)}
+.faq-card[data-category="events"] .q-icon{background:rgba(124,255,192,.08);border-color:rgba(124,255,192,.22);color:var(--green)}
+.question-text h3{margin:0;font-size:1.08rem;letter-spacing:-.02em}
+.category-tag{
+  display:inline-flex;margin-top:.45rem;padding:.28rem .58rem;border-radius:999px;
+  font-size:.72rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:var(--muted)
+}
+.faq-card[data-category="rules"] .category-tag{color:var(--gold);border-color:rgba(255,202,115,.22);background:rgba(255,202,115,.08)}
+.faq-card[data-category="tech"] .category-tag{color:var(--purple);border-color:rgba(176,137,255,.22);background:rgba(176,137,255,.08)}
+.faq-card[data-category="events"] .category-tag{color:var(--green);border-color:rgba(124,255,192,.22);background:rgba(124,255,192,.08)}
+.toggle{
+  width:42px;height:42px;border-radius:14px;display:grid;place-items:center;flex-shrink:0;
+  border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:var(--text);font-size:1.2rem;font-weight:900;transition:.2s
+}
+.answer{
+  max-height:0;overflow:hidden;padding:0 1.25rem;color:var(--muted);transition:max-height .35s ease,padding .35s ease
+}
+.answer-inner{padding:0 0 1.2rem 0;line-height:1.8}
+.channel-tag{
+  display:inline-flex;align-items:center;gap:.35rem;padding:.28rem .6rem;border-radius:10px;
+  background:rgba(103,97,171,.22);border:1px solid rgba(146,136,255,.18);color:#cfd2ff;font-weight:800;font-size:.9rem
+}
+.faq-card.active .answer{max-height:240px;padding:0 1.25rem}
+.faq-card.active .toggle{transform:rotate(45deg);color:var(--accent);border-color:rgba(8,210,255,.24)}
+.bottom-panels{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:1.2rem}
+.panel{
+  position:relative;overflow:hidden;padding:1.45rem;border-radius:24px;box-shadow:var(--shadow)
+}
+.panel::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(135deg, rgba(255,255,255,.05), transparent 45%)}
+.panel>*{position:relative;z-index:1}
+.panel h3{margin:0 0 .7rem;font-size:1.2rem}
+.panel p,.panel li{margin:.45rem 0;color:var(--muted);line-height:1.75}
+.panel.rules-panel{border:1px solid rgba(255,202,115,.22);background:linear-gradient(135deg, rgba(255,202,115,.1), rgba(255,255,255,.03))}
+.panel.events-panel{border:1px solid rgba(124,255,192,.2);background:linear-gradient(135deg, rgba(124,255,192,.1), rgba(255,255,255,.03))}
+.final-banner{
+  margin-top:1.2rem;padding:1.7rem;border-radius:26px;text-align:center;
+  background:linear-gradient(135deg, rgba(8,210,255,.12), rgba(255,202,115,.08)), rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);box-shadow:var(--shadow)
+}
+.final-banner h3{margin:0 0 .75rem;font-size:1.5rem;letter-spacing:-.03em}
+.final-banner p{margin:0 auto;max-width:720px;color:var(--muted);line-height:1.8}
+.empty-state{display:none;padding:1.3rem;border-radius:18px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:var(--muted);text-align:center}
+.footer{text-align:center;color:var(--muted);padding:2rem 0 3rem}
+@media (max-width:1080px){.layout{grid-template-columns:1fr}.sidebar{position:relative;top:0}}
+@media (max-width:760px){
+  .nav{padding:.9rem 0 1rem;flex-direction:column;align-items:flex-start}
+  .nav-links{justify-content:flex-start}
+  .nav-cta{width:100%;text-align:center}
+  .hero-meta{flex-direction:column;align-items:center}
+  .filter-buttons,.bottom-panels{grid-template-columns:1fr}
+  .question{align-items:flex-start}
+}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="index.html">Crabby's<span>Civilization Experiments</span></a>
+    <nav class="nav-links">
+      <a href="index.html">Index</a>
+      <a href="home.html">Home</a>
+      <a href="apply.html">Apply</a>
+      <a href="forms.html">Forms</a>
+      <a href="staff.html">Staff</a>
+      <a href="rules.html">Rules</a>
+      <a class="active" href="faq.html">FAQ</a>
+    </nav>
+    <a class="nav-cta" href="#faqList">Browse FAQ</a>
+  </div>
+</header>
+
+<div class="container">
+  <section class="hero">
+    <div class="eyebrow">Frequently asked questions</div>
+    <h1>Common <span>Questions</span></h1>
+    <p>Everything players usually want to know before joining or participating in Crabby's Civilization Experiments, gathered into one decorated hub with quick answers.</p>
+    <div class="hero-meta">
+      <div class="meta-chip"><strong>12 Questions</strong><span>Core FAQ answers</span></div>
+      <div class="meta-chip"><strong>Searchable</strong><span>Find answers quickly</span></div>
+      <div class="meta-chip"><strong>Categories</strong><span>Rules, events, and tech</span></div>
+    </div>
+  </section>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <h3>FAQ Tools</h3>
+      <div class="search-box">
+        <input id="faqSearch" type="text" placeholder="Search questions..." />
+      </div>
+      <div class="filter-buttons">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="events">Events</button>
+        <button class="filter-btn" data-filter="tech">Tech</button>
+        <button class="filter-btn" data-filter="rules">Rules</button>
+      </div>
+      <a href="#faq1">Version</a>
+      <a href="#faq2">Bedrock Support</a>
+      <a href="#faq4">Rules</a>
+      <a href="#faq5">Timings</a>
+      <a href="#faq6">Applications</a>
+      <a href="#faq9">Streaming</a>
+      <a href="#faq10">Licensed Minecraft</a>
+      <a href="#faq11">Maps / Indicators</a>
+      <div class="sidebar-note">
+        Use the search box or category buttons to narrow the list. Click any question to expand its answer.
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="faq-grid" id="faqList">
+        <article class="faq-card" id="faq1" data-category="tech" data-search="version events 1.21.8 may change depending on event">
+          <div class="question">
+            <div class="question-left">
+              <div class="q-icon">🧩</div>
+              <div class="question-text">
+                <h3>1. What version are the events?</h3>
+                <div class="category-tag">Tech</div>
+              </div>
+            </div>
+            <div class="toggle">+</div>
+          </div>
+          <div class="answer"><div class="answer-inner">The events are currently planned for <strong>1.21.8</strong>, though this may change depending on the specific event.</div></div>
+        </article>
+
+        <article class="faq-card" id="faq2" data-category="tech" data-search="bedrock java support platform current events">
+          <div class="question">
+            <div class="question-left">
+              <div class="q-icon">📱</div>
+              <div class="question-text">
+                <h3>2. Can Bedrock play?</h3>
+                <div class="category-tag">Tech</div>
+              </div>
+            </div>
+            <div class="toggle">+</div>
+          </div>
+          <div class="answer"><div class="answer-inner">Yes. We support both <strong>Bedrock</strong> and <strong>Java</strong>, though this can depend on the current event setup.</div></div>
+        </article>
+
+        <article class="faq-card" id="faq3" data-category="tech" data-search="mods mod simple voice chat java requirement">
+          <div class="question">
+            <div class="question-left">
+              <div class="q-icon">🎤</div>
+              <div class="question-text">
+                <h3>3. What mods do we need for the events?</h3>
+                <div class="category-tag">Tech</div>
+              </div>
+            </div>
+            <div class="toggle">+</div>
+          </div>
+          <div class="answer"><div class="answer-inner">If you are on Java, you will generally need <strong>Simple Voice Chat</strong>.</div></div>
+        </article>
+
+        <article class="faq-card" id="faq4" data-category="rules" data-search="rules located where rules page channel">
+          <div class="question">
+            <div class="question-left">
+              <div class="q-icon">📜</div>
+              <div class="question-text">
+                <h3>4. What are the rules?</h3>
+                <div class="category-tag">Rules</div>
+              </div>
+            </div>
+            <div class="toggle">+</div>
+          </div>
+          <div class="answer"><div class="answer-inner">The rules are located on the <a class="channel-tag" href="rules.html"># • Rules</a> page.</div></div>
+        </article>
+
+        <article class="faq-card" id="faq5" data-category="events" data-search="timings schedule event time located schedule">
+          <div class="question">
+            <div class="question-left">
+              <div class="q-icon">🗓️</div>
+              <div class="question-text">
+                <h3>5. Where are the timings of the event?</h3>
+                <div class="category-tag">Events</div>
+              </div>
+            </div>
+            <div class="toggle">+</div>
+          </div>
+          <div class="answer"><div class="answer-inner">The timings will be located in <span class="channel-tag"># 🗓️ • Schedule</span>.</div></div>
+        </article>
+
+        <article class="faq-card" id="faq6" data-category="events" data-search="apply application forms applications">
+          <div class="question">
+            <div class="question-left">
+              <div class="q-icon">📄</div>
+              <div class="question-text">
+                <h3>6. How can I apply for the events?</h3>
+                <div class="category-tag">Events</div>
+              </div>
+            </div>
+            <div class="toggle">+</div>
+          </div>
+          <div class="answer"><div class="answer-inner">Application forms will be placed in <span class="channel-tag"># 📜 • Applications</span>.</div></div>
+        </article>
+
+        <article class="faq-card" id="faq7" data-category="events" data-search="when events happening announcements main announcements">
+          <div class="question">
+            <div class="question-left">
+              <div class="q-icon">📣</div>
+              <div class="question-text">
+                <h3>7. How can I know when events are going on?</h3>
+                <div class="category-tag">Events</div>
+              </div>
+            </div>
+            <div class="toggle">+</div>
+          </div>
+          <div class="answer"><div class="answer-inner">We will announce event updates in <span class="channel-tag"># 📢 • Main-Announcements</span>.</div></div>
+        </article>
+
+        <article class="faq-card" id="faq8" data-category="events" data-search="support donate donation organization">
+          <div class="question">
+            <div class="question-left">
+              <div class="q-icon">💸</div>
+              <div class="question-text">
+                <h3>8. How can I support this organization?</h3>
+                <div class="category-tag">Events</div>
+              </div>
+            </div>
+            <div class="toggle">+</div>
+          </div>
+          <div class="answer"><div class="answer-inner">You can donate in <span class="channel-tag"># 💸 • Donate</span>.</div></div>
+        </article>
+
+        <article class="faq-card" id="faq9" data-category="events" data-search="upload stream event content creation record">
+          <div class="question">
+            <div class="question-left">
+              <div class="q-icon">🎥</div>
+              <div class="question-text">
+                <h3>9. Can we upload and stream the event?</h3>
+                <div class="category-tag">Events</div>
+              </div>
+            </div>
+            <div class="toggle">+</div>
+          </div>
+          <div class="answer"><div class="answer-inner">Yes. We encourage people to <strong>upload and stream</strong> the events.</div></div>
+        </article>
+
+        <article class="faq-card" id="faq10" data-category="rules" data-search="cracked minecraft licensed allowed play">
+          <div class="question">
+            <div class="question-left">
+              <div class="q-icon">🚫</div>
+              <div class="question-text">
+                <h3>10. Can I play on cracked Minecraft?</h3>
+                <div class="category-tag">Rules</div>
+              </div>
+            </div>
+            <div class="toggle">+</div>
+          </div>
+          <div class="answer"><div class="answer-inner">No. Unfortunately, we only support <strong>licensed Minecraft</strong>.</div></div>
+        </article>
+
+        <article class="faq-card" id="faq11" data-category="rules" data-search="maps indicators allowed not allowed">
+          <div class="question">
+            <div class="question-left">
+              <div class="q-icon">🗺️</div>
+              <div class="question-text">
+                <h3>11. Are maps and indicators allowed?</h3>
+                <div class="category-tag">Rules</div>
+              </div>
+            </div>
+            <div class="toggle">+</div>
+          </div>
+          <div class="answer"><div class="answer-inner">No. Maps and indicators are <strong>not allowed</strong>.</div></div>
+        </article>
+
+        <article class="faq-card" id="faq12" data-category="events" data-search="video recorded uploaded event recording">
+          <div class="question">
+            <div class="question-left">
+              <div class="q-icon">📹</div>
+              <div class="question-text">
+                <h3>12. Will this event be a video?</h3>
+                <div class="category-tag">Events</div>
+              </div>
+            </div>
+            <div class="toggle">+</div>
+          </div>
+          <div class="answer"><div class="answer-inner">Yes. We will upload the event and it will be <strong>recorded</strong>.</div></div>
+        </article>
+      </div>
+
+      <div class="empty-state" id="emptyState">No FAQ entries matched that search or category.</div>
+
+      <section class="bottom-panels">
+        <div class="panel rules-panel">
+          <h3>Need rule details?</h3>
+          <p>If your question is about restrictions, conduct, or what is and is not allowed, the full rules page is the best place to check.</p>
+          <p><a class="channel-tag" href="rules.html">Open Rules Page</a></p>
+        </div>
+        <div class="panel events-panel">
+          <h3>Need season updates?</h3>
+          <p>For timings, applications, announcements, and support information, keep an eye on the related sections and announcement channels.</p>
+          <p><span class="channel-tag"># 📢 • Main-Announcements</span></p>
+        </div>
+      </section>
+
+      <section class="final-banner">
+        <h3>Still have questions?</h3>
+        <p>If something is not covered here, check the rules, application, or forms pages, or ask staff directly. This FAQ is meant to answer the most common things quickly while keeping the site clean and easy to navigate.</p>
+      </section>
+    </main>
+  </div>
+
+  <div class="footer">Crabby's Civilization Experiments — FAQ</div>
+</div>
+
+<script>
+const progressBar = document.getElementById('progressBar');
+const updateProgress = () => {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+  progressBar.style.width = progress + '%';
+};
+window.addEventListener('scroll', updateProgress);
+updateProgress();
+
+document.querySelectorAll('.faq-card .question').forEach(q => {
+  q.addEventListener('click', () => {
+    q.parentElement.classList.toggle('active');
+  });
+});
+
+const searchInput = document.getElementById('faqSearch');
+const filterButtons = document.querySelectorAll('.filter-btn');
+const cards = document.querySelectorAll('.faq-card');
+const emptyState = document.getElementById('emptyState');
+let activeFilter = 'all';
+
+function applyFilters() {
+  const term = searchInput.value.toLowerCase().trim();
+  let visible = 0;
+
+  cards.forEach(card => {
+    const matchesFilter = activeFilter === 'all' || card.dataset.category === activeFilter;
+    const matchesSearch = card.dataset.search.toLowerCase().includes(term) || card.innerText.toLowerCase().includes(term);
+    const show = matchesFilter && matchesSearch;
+    card.classList.toggle('hidden', !show);
+    if (show) visible++;
+  });
+
+  emptyState.style.display = visible === 0 ? 'block' : 'none';
+}
+
+searchInput.addEventListener('input', applyFilters);
+filterButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    filterButtons.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.dataset.filter;
+    applyFilters();
+  });
+});
+</script>
+</body>
+</html>

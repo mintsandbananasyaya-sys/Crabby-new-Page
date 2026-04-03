@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crabby's Civilization Experiments — Staff</title>
+  <style>
+    :root {
+      --bg: #030915;
+      --bg-2: #06152c;
+      --panel: rgba(6, 18, 40, 0.86);
+      --panel-2: rgba(255, 255, 255, 0.04);
+      --text: #f4fbff;
+      --muted: #a9bdd6;
+      --accent: #07d3ff;
+      --accent-2: #6be7ff;
+      --gold: #ffca73;
+      --purple: #b089ff;
+      --green: #69f0b0;
+      --border: rgba(7, 211, 255, 0.2);
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.46);
+      --max-width: 1450px;
+      --radius: 28px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top, rgba(7, 211, 255, 0.1), transparent 22%),
+        linear-gradient(180deg, #020813 0%, #041327 44%, #020915 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.95;
+      background-image:
+        radial-gradient(circle at 8% 18%, rgba(7,211,255,0.82) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 22% 72%, rgba(7,211,255,0.75) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 48% 11%, rgba(7,211,255,0.8) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 64% 84%, rgba(7,211,255,0.8) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 82% 28%, rgba(7,211,255,0.85) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 95% 62%, rgba(7,211,255,0.76) 0 1px, transparent 1.5px);
+      z-index: -4;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 7% 24%, transparent 0 100px, rgba(255,255,255,0.03) 101px 104px, transparent 105px 145px, rgba(255,255,255,0.022) 146px 149px, transparent 150px),
+        radial-gradient(circle at 28% 77%, transparent 0 160px, rgba(255,255,255,0.028) 161px 164px, transparent 165px 225px, rgba(255,255,255,0.018) 226px 229px, transparent 230px),
+        radial-gradient(circle at 56% 18%, transparent 0 180px, rgba(255,255,255,0.022) 181px 184px, transparent 185px 250px, rgba(255,255,255,0.016) 251px 254px, transparent 255px),
+        radial-gradient(circle at 88% 34%, transparent 0 130px, rgba(255,255,255,0.026) 131px 134px, transparent 135px 185px, rgba(255,255,255,0.018) 186px 189px, transparent 190px),
+        radial-gradient(circle at 86% 82%, transparent 0 130px, rgba(255,255,255,0.026) 131px 134px, transparent 135px 185px, rgba(255,255,255,0.018) 186px 189px, transparent 190px);
+      z-index: -3;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(calc(100% - 2rem), var(--max-width));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 60;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.84), rgba(0, 0, 0, 0.42));
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .nav {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand {
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      line-height: 1;
+      font-size: 0.98rem;
+    }
+
+    .brand span {
+      display: block;
+      color: var(--accent);
+      text-shadow: 0 0 14px rgba(7,211,255,0.45);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .nav-links a {
+      font-weight: 800;
+      font-size: 0.93rem;
+      color: var(--muted);
+      transition: color 0.2s ease, text-shadow 0.2s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--accent);
+      text-shadow: 0 0 12px rgba(7,211,255,0.45);
+    }
+
+    .nav-cta {
+      padding: 0.8rem 1rem;
+      border: 1px solid rgba(7,211,255,0.65);
+      border-radius: 14px;
+      color: var(--accent);
+      font-weight: 800;
+      background: rgba(7,211,255,0.07);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02), 0 0 20px rgba(7,211,255,0.08);
+    }
+
+    .hero {
+      position: relative;
+      padding: 8.5rem 0 3rem;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 10%, rgba(255, 202, 115, 0.24), transparent 18%),
+        linear-gradient(180deg, rgba(7,211,255,0.04), transparent 40%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      padding: 0.45rem 0.8rem;
+      border-radius: 999px;
+      background: rgba(7,211,255,0.08);
+      border: 1px solid rgba(7,211,255,0.2);
+      color: var(--accent);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.78rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero-title {
+      margin: 0;
+      font-size: clamp(3rem, 7vw, 5.6rem);
+      letter-spacing: -0.06em;
+      line-height: 0.95;
+      font-weight: 1000;
+    }
+
+    .hero-title span {
+      color: var(--accent);
+      text-shadow:
+        0 0 10px rgba(7,211,255,0.95),
+        0 0 26px rgba(7,211,255,0.7),
+        0 0 58px rgba(7,211,255,0.26);
+    }
+
+    .hero-subtitle {
+      max-width: 760px;
+      margin: 1.1rem auto 0;
+      color: var(--muted);
+      line-height: 1.85;
+      font-size: 1.04rem;
+    }
+
+    .hero-meta {
+      margin: 1.5rem auto 0;
+      display: flex;
+      justify-content: center;
+      gap: 0.9rem;
+      flex-wrap: wrap;
+    }
+
+    .meta-chip {
+      padding: 0.8rem 1rem;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--muted);
+      min-width: 150px;
+    }
+
+    .meta-chip strong {
+      display: block;
+      color: var(--text);
+      font-size: 1rem;
+      margin-bottom: 0.15rem;
+    }
+
+    .showcase-panel {
+      margin-top: 2rem;
+      padding: 1.4rem;
+      border-radius: var(--radius);
+      border: 1px solid rgba(7,211,255,0.18);
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    .showcase-card,
+    .showcase-side {
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(4,18,38,0.8), rgba(3,12,28,0.9));
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 1.35rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .showcase-card::before,
+    .showcase-side::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(7,211,255,0.1), transparent 45%);
+      pointer-events: none;
+    }
+
+    .showcase-card > *,
+    .showcase-side > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .showcase-owner {
+      display: flex;
+      gap: 1.2rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .showcase-avatar {
+      width: 104px;
+      height: 104px;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 16px 36px rgba(7,211,255,0.22);
+      border: 1px solid rgba(7,211,255,0.24);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .showcase-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .showcase-text h2 {
+      margin: 0;
+      font-size: 2rem;
+      letter-spacing: -0.04em;
+    }
+
+    .role-pill {
+      display: inline-flex;
+      margin-top: 0.6rem;
+      padding: 0.38rem 0.72rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .role-owner { color: var(--gold); border-color: rgba(255,202,115,0.28); background: rgba(255,202,115,0.08); }
+    .role-admin { color: var(--accent); border-color: rgba(7,211,255,0.28); background: rgba(7,211,255,0.08); }
+    .role-mod { color: var(--green); border-color: rgba(105,240,176,0.28); background: rgba(105,240,176,0.08); }
+    .role-dev { color: var(--purple); border-color: rgba(176,137,255,0.28); background: rgba(176,137,255,0.08); }
+
+    .showcase-text p,
+    .showcase-side p {
+      color: var(--muted);
+      line-height: 1.75;
+      margin: 0.85rem 0 0;
+    }
+
+    .showcase-side h3 {
+      margin: 0 0 0.75rem;
+      font-size: 1.2rem;
+    }
+
+    .mini-stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.8rem;
+      margin-top: 1rem;
+    }
+
+    .mini-stat {
+      border-radius: 16px;
+      padding: 0.95rem;
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.07);
+      color: var(--muted);
+    }
+
+    .mini-stat strong {
+      display: block;
+      color: var(--text);
+      margin-bottom: 0.2rem;
+    }
+
+    main {
+      padding-bottom: 3rem;
+    }
+
+    .staff-section {
+      padding: 1rem 0 2.6rem;
+    }
+
+    .section-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.15rem;
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 900;
+      color: #d7e6fa;
+      letter-spacing: -0.03em;
+    }
+
+    .section-note {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .staff-grid {
+      display: grid;
+      gap: 1.2rem;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .staff-grid.top-admins {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .staff-grid.owner-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .staff-card {
+      min-height: 220px;
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      background:
+        linear-gradient(180deg, rgba(2,20,48,0.76), rgba(2,14,32,0.92)),
+        linear-gradient(135deg, rgba(7,211,255,0.08), transparent 55%);
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 1.5rem 1.2rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+    }
+
+    .staff-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 28px 75px rgba(7,211,255,0.12), 0 20px 60px rgba(0,0,0,0.48);
+      border-color: rgba(7,211,255,0.34);
+    }
+
+    .staff-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(7,211,255,0.12), transparent 46%);
+      pointer-events: none;
+    }
+
+    .staff-card::after {
+      content: "";
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      right: -60px;
+      top: -60px;
+      background: radial-gradient(circle, rgba(7,211,255,0.1), transparent 70%);
+      pointer-events: none;
+    }
+
+    .staff-card.owner-card {
+      min-height: 200px;
+      background:
+        linear-gradient(180deg, rgba(18,19,30,0.68), rgba(12,14,22,0.92)),
+        linear-gradient(135deg, rgba(255,202,115,0.08), transparent 55%);
+      border-color: rgba(255,202,115,0.22);
+    }
+
+    .staff-card.owner-card:hover {
+      border-color: rgba(255,202,115,0.34);
+      box-shadow: 0 28px 75px rgba(255,202,115,0.1), 0 20px 60px rgba(0,0,0,0.48);
+    }
+
+    .staff-card.dev-card {
+      border-color: rgba(176,137,255,0.2);
+      background:
+        linear-gradient(180deg, rgba(16,14,34,0.72), rgba(11,10,24,0.92)),
+        linear-gradient(135deg, rgba(176,137,255,0.08), transparent 55%);
+    }
+
+    .staff-card.dev-card:hover {
+      border-color: rgba(176,137,255,0.34);
+      box-shadow: 0 28px 75px rgba(176,137,255,0.09), 0 20px 60px rgba(0,0,0,0.48);
+    }
+
+    .staff-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .staff-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.7rem;
+      width: 100%;
+    }
+
+    .avatar {
+      width: 78px;
+      height: 78px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 12px 26px rgba(7,211,255,0.2);
+    }
+
+    .owner-card .avatar {
+      width: 88px;
+      height: 88px;
+      box-shadow: 0 12px 28px rgba(255,202,115,0.16);
+    }
+
+    .dev-card .avatar {
+      box-shadow: 0 12px 28px rgba(176,137,255,0.15);
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .staff-name {
+      margin: 0;
+      font-size: 1.08rem;
+      line-height: 1.18;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+
+    .staff-role {
+      margin: 0;
+      color: #d1ddee;
+      font-size: 0.95rem;
+      font-weight: 700;
+      line-height: 1.24;
+    }
+
+    .staff-role-badge {
+      display: inline-flex;
+      padding: 0.36rem 0.68rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 0.12rem;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .owner-card .staff-role-badge { color: var(--gold); border-color: rgba(255,202,115,0.24); background: rgba(255,202,115,0.08); }
+    .admin-card .staff-role-badge { color: var(--accent); border-color: rgba(7,211,255,0.24); background: rgba(7,211,255,0.08); }
+    .mod-card .staff-role-badge { color: var(--green); border-color: rgba(105,240,176,0.24); background: rgba(105,240,176,0.08); }
+    .dev-card .staff-role-badge { color: var(--purple); border-color: rgba(176,137,255,0.24); background: rgba(176,137,255,0.08); }
+
+    .team-summary {
+      margin-top: 1rem;
+      padding: 1.45rem 1.5rem;
+      border-radius: 24px;
+      border: 1px solid rgba(7,211,255,0.16);
+      background: linear-gradient(135deg, rgba(7,211,255,0.11), rgba(255,255,255,0.03));
+      color: var(--muted);
+      line-height: 1.8;
+      box-shadow: var(--shadow);
+    }
+
+    .footer {
+      padding: 1rem 0 3rem;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    @media (max-width: 1320px) {
+      .staff-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 1120px) {
+      .showcase-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .staff-grid,
+      .staff-grid.top-admins {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .nav {
+        padding: 0.9rem 0 1rem;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .nav-links {
+        justify-content: flex-start;
+      }
+
+      .staff-grid,
+      .staff-grid.top-admins,
+      .mini-stat-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .hero-meta {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .nav-cta {
+        width: 100%;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .staff-grid,
+      .staff-grid.top-admins,
+      .mini-stat-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .staff-card,
+      .staff-card.owner-card {
+        min-height: 190px;
+      }
+
+      .showcase-owner {
+        justify-content: center;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html">Crabby's<span>Civilization Experiments</span></a>
+
+      <nav class="nav-links">
+        <a href="index.html">Index</a>
+        <a href="home.html">Home</a>
+        <a href="apply.html">Apply</a>
+        <a class="active" href="staff.html">Staff</a>
+        <a href="rules.html">Rules</a>
+        <a href="faq.html">FAQ</a>
+      </nav>
+
+      <a class="nav-cta" href="#owners">Staff Team</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero container">
+      <div class="eyebrow">Season 4 leadership and support</div>
+      <h1 class="hero-title">Meet the <span>Staff Team</span></h1>
+      <p class="hero-subtitle">
+        The people helping run Crabby's Civilization Experiments behind the scenes. From ownership and admin leadership to moderation, production, and development, this is the team supporting each season.
+      </p>
+
+      <div class="hero-meta">
+        <div class="meta-chip"><strong>1 Owner</strong><span>Overall direction</span></div>
+        <div class="meta-chip"><strong>3 Top Admins</strong><span>Leadership and oversight</span></div>
+        <div class="meta-chip"><strong>8 Mods + Production</strong><span>Daily support and event work</span></div>
+        <div class="meta-chip"><strong>5 Developers</strong><span>Technical development</span></div>
+      </div>
+
+      <div class="showcase-panel">
+        <div class="showcase-grid">
+          <div class="showcase-card">
+            <div class="showcase-owner">
+              <div class="showcase-avatar">
+                <img src="https://mc-heads.net/avatar/Crabby" alt="Crabby Minecraft head" />
+              </div>
+              <div class="showcase-text">
+                <h2>Crabby</h2>
+                <div class="role-pill role-owner">Owner</div>
+                <p>
+                  Leading the overall vision of the server and overseeing the direction of each civilization experiment.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="showcase-side">
+            <h3>How the team is structured</h3>
+            <p>
+              The staff team is split across ownership, admin leadership, moderation, production, and development so the server can handle both community management and the technical side of each season.
+            </p>
+            <div class="mini-stat-grid">
+              <div class="mini-stat"><strong>Moderation</strong><span>Support, order, player guidance</span></div>
+              <div class="mini-stat"><strong>Production</strong><span>Season support and project work</span></div>
+              <div class="mini-stat"><strong>Development</strong><span>Technical systems and coding</span></div>
+              <div class="mini-stat"><strong>Leadership</strong><span>Planning and season oversight</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="staff-section container" id="owners">
+      <div class="section-bar">
+        <h2 class="section-title">Owners</h2>
+        <div class="section-note">Server leadership</div>
+      </div>
+      <div class="staff-grid owner-grid">
+        <article class="staff-card owner-card">
+          <div class="staff-inner">
+            <div class="avatar">
+              <img src="https://mc-heads.net/avatar/Crabby" alt="Crabby Minecraft head" />
+            </div>
+            <h3 class="staff-name">Crabby</h3>
+            <p class="staff-role">Owner</p>
+            <div class="staff-role-badge">Ownership</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="staff-section container">
+      <div class="section-bar">
+        <h2 class="section-title">Top Admins</h2>
+        <div class="section-note">Core server leadership</div>
+      </div>
+      <div class="staff-grid top-admins">
+        <article class="staff-card admin-card">
+          <div class="staff-inner">
+            <div class="avatar"><img src="https://mc-heads.net/avatar/PhantomExplores" alt="PhantomExplores Minecraft head" /></div>
+            <h3 class="staff-name">PhantomExplores / Cross</h3>
+            <p class="staff-role">Head Admin</p>
+            <div class="staff-role-badge">Admin</div>
+          </div>
+        </article>
+
+        <article class="staff-card admin-card">
+          <div class="staff-inner">
+            <div class="avatar"><img src="https://mc-heads.net/avatar/Kessoky_ikuyo" alt="Kessoky Minecraft head" /></div>
+            <h3 class="staff-name">HitoriGotah / Kessoky</h3>
+            <p class="staff-role">Admin Advisor</p>
+            <div class="staff-role-badge">Admin</div>
+          </div>
+        </article>
+
+        <article class="staff-card admin-card">
+          <div class="staff-inner">
+            <div class="avatar"><img src="https://mc-heads.net/avatar/Arshtyrant" alt="Arshtyrant Minecraft head" /></div>
+            <h3 class="staff-name">Arshtyrant</h3>
+            <p class="staff-role">Admin Advisor</p>
+            <div class="staff-role-badge">Admin</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="staff-section container">
+      <div class="section-bar">
+        <h2 class="section-title">Moderators + Production</h2>
+        <div class="section-note">Community support and season operations</div>
+      </div>
+      <div class="staff-grid">
+        <article class="staff-card mod-card">
+          <div class="staff-inner">
+            <div class="avatar"><img src="https://mc-heads.net/avatar/OrcaForever" alt="OrcaForever Minecraft head" /></div>
+            <h3 class="staff-name">OrcaForever</h3>
+            <p class="staff-role">Head Production</p>
+            <div class="staff-role-badge">Production</div>
+          </div>
+        </article>
+
+        <article class="staff-card mod-card">
+          <div class="staff-inner">
+            <div class="avatar"><img src="https://mc-heads.net/avatar/pigp0p" alt="pigp0p Minecraft head" /></div>
+            <h3 class="staff-name">pigp0p</h3>
+            <p class="staff-role">Moderator</p>
+            <div class="staff-role-badge">Moderator</div>
+          </div>
+        </article>
+
+        <article class="staff-card mod-card">
+          <div class="staff-inner">
+            <div class="avatar"><img src="https://mc-heads.net/avatar/KapiMC" alt="KapiMC Minecraft head" /></div>
+            <h3 class="staff-name">KapiMC</h3>
+            <p class="staff-role">Production</p>
+            <div class="staff-role-badge">Production</div>
+          </div>
+        </article>
+
+        <article class="staff-card mod-card">
+          <div class="staff-inner">
+            <div class="avatar"><img src="https://mc-heads.net/avatar/Puggggamer" alt="Puggggamer Minecraft head" /></div>
+            <h3 class="staff-name">Puggggamer</h3>
+            <p class="staff-role">Production</p>
+            <div class="staff-role-badge">Production</div>
+          </div>
+        </article>
+
+        <article class="staff-card mod-card">
+          <div class="staff-inner">
+            <div class="avatar"><img src="https://mc-heads.net/avatar/Japplesauce" alt="Japplesauce Minecraft head" /></div>
+            <h3 class="staff-name">Japplesauce / Krulesilence</h3>
+            <p class="staff-role">Moderator</p>
+            <div class="staff-role-badge">Moderator</div>
+          </div>
+        </article>
+
+        <article class="staff-card mod-card">
+          <div class="staff-inner">
+            <div class="avatar"><img src="https://mc-heads.net/avatar/Moonstoper11" alt="Redn Minecraft head" /></div>
+            <h3 class="staff-name">Redn</h3>
+            <p class="staff-role">Production</p>
+            <div class="staff-role-badge">Production</div>
+          </div>
+        </article>
+
+        <article class="staff-card mod-card">
+          <div class="staff-inner">
+            <div class="avatar"><img src="https://mc-heads.net/avatar/alphadarkman" alt="alphadarkman Minecraft head" /></div>
+            <h3 class="staff-name">alphadarkman</h3>
+            <p class="staff-role">Production + Coder</p>
+            <div class="staff-role-badge">Production</div>
+          </div>
+        </article>
+
+        <article class="staff-card mod-card">
+          <div class="staff-inner">
+            <div class="avatar"><img src="https://mc-heads.net/avatar/EGLsupa" alt="EGLsupa Minecraft head" /></div>
+            <h3 class="staff-name">EGLsupa</h3>
+            <p class="staff-role">Moderator</p>
+            <div class="staff-role-badge">Moderator</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="staff-section container">
+      <div class="section-bar">
+        <h2 class="section-title">Developers</h2>
+        <div class="section-note">Technical development team</div>
+      </div>
+      <div class="staff-grid">
+        <article class="staff-card dev-card">
+          <div class="staff-inner">
+            <div class="avatar"><img src="https://mc-heads.net/avatar/SUSRADIST" alt="SUSRADIST Minecraft head" /></div>
+            <h3 class="staff-name">SUSRADIST</h3>
+            <p class="staff-role">Head Developer</p>
+            <div class="staff-role-badge">Developer</div>
+          </div>
+        </article>
+
+        <article class="staff-card dev-card">
+          <div class="staff-inner">
+            <div class="avatar"><img src="https://mc-heads.net/avatar/TheDGamer5108" alt="TheDGamer5108 Minecraft head" /></div>
+            <h3 class="staff-name">TheDGamer5108</h3>
+            <p class="staff-role">Developer</p>
+            <div class="staff-role-badge">Developer</div>
+          </div>
+        </article>
+
+        <article class="staff-card dev-card">
+          <div class="staff-inner">
+            <div class="avatar"><img src="https://mc-heads.net/avatar/Jinnati" alt="Jinnati Minecraft head" /></div>
+            <h3 class="staff-name">Jinnati</h3>
+            <p class="staff-role">Developer</p>
+            <div class="staff-role-badge">Developer</div>
+          </div>
+        </article>
+
+        <article class="staff-card dev-card">
+          <div class="staff-inner">
+            <div class="avatar"><img src="https://mc-heads.net/avatar/archiex1" alt="archiex1 Minecraft head" /></div>
+            <h3 class="staff-name">archiex1</h3>
+            <p class="staff-role">Developer</p>
+            <div class="staff-role-badge">Developer</div>
+          </div>
+        </article>
+
+        <article class="staff-card dev-card">
+          <div class="staff-inner">
+            <div class="avatar"><img src="https://mc-heads.net/avatar/tixcy54" alt="tixcy54 Minecraft head" /></div>
+            <h3 class="staff-name">tixcy54</h3>
+            <p class="staff-role">Developer</p>
+            <div class="staff-role-badge">Developer</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="team-summary">
+        The staff team keeps the project running across leadership, player support, production work, and technical development. As the server grows and new seasons begin, this page can be updated with new roles, new members, and new teams.
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Crabby's Civilization Experiments — Staff page.</p>
+    </div>
+  </footer>
+</body>
+</html>

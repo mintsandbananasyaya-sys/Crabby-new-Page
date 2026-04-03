@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crabby's Civilization Experiments — Apply</title>
+  <style>
+    :root {
+      --bg: #03070f;
+      --bg-2: #08111f;
+      --panel: rgba(10, 18, 32, 0.82);
+      --panel-soft: rgba(255, 255, 255, 0.05);
+      --text: #f5fbff;
+      --muted: #a8b7ce;
+      --accent: #09d3ff;
+      --accent-2: #6ae6ff;
+      --glow: rgba(9, 211, 255, 0.45);
+      --gold: #ffbc67;
+      --border: rgba(255, 255, 255, 0.1);
+      --shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
+      --radius: 24px;
+      --max-width: 1240px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top, rgba(9, 211, 255, 0.08), transparent 20%),
+        linear-gradient(180deg, #02050b 0%, #06101d 46%, #03070f 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 10% 16%, rgba(9,211,255,0.9) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 20% 76%, rgba(9,211,255,0.75) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 37% 48%, rgba(9,211,255,0.8) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 56% 10%, rgba(9,211,255,0.8) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 68% 82%, rgba(9,211,255,0.75) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 84% 24%, rgba(9,211,255,0.85) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 94% 66%, rgba(9,211,255,0.8) 0 1px, transparent 1.5px);
+      opacity: 0.9;
+      z-index: -2;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      width: min(calc(100% - 2rem), var(--max-width));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 50;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.84), rgba(0, 0, 0, 0.42));
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .nav {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand {
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      line-height: 1;
+      font-size: 0.98rem;
+    }
+
+    .brand span {
+      display: block;
+      color: var(--accent);
+      text-shadow: 0 0 14px var(--glow);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .nav-links a {
+      font-weight: 800;
+      font-size: 0.93rem;
+      color: var(--muted);
+      transition: color 0.2s ease, text-shadow 0.2s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--accent);
+      text-shadow: 0 0 12px var(--glow);
+    }
+
+    .nav-cta {
+      padding: 0.8rem 1rem;
+      border: 1px solid rgba(9, 211, 255, 0.65);
+      border-radius: 14px;
+      color: var(--accent);
+      font-weight: 800;
+      background: rgba(9, 211, 255, 0.07);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02), 0 0 20px rgba(9,211,255,0.08);
+    }
+
+    .hero {
+      min-height: 84vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      isolation: isolate;
+      padding: 8rem 0 4rem;
+      background:
+        linear-gradient(180deg, rgba(2, 7, 16, 0.5) 0%, rgba(3, 8, 18, 0.66) 45%, rgba(0,0,0,0.78) 100%),
+        linear-gradient(90deg, rgba(2, 7, 16, 0.75) 0%, rgba(4, 10, 20, 0.42) 50%, rgba(0,0,0,0.58) 100%),
+        url('https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=1800&q=80') center/cover no-repeat;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 22%, rgba(255, 188, 103, 0.35), transparent 18%);
+      z-index: -1;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 220px;
+      background: linear-gradient(180deg, transparent, #03070f 84%);
+      z-index: -1;
+    }
+
+    .hero-grid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 2rem;
+      width: 100%;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-weight: 900;
+      font-size: 1rem;
+      text-transform: uppercase;
+      margin-bottom: 0.9rem;
+    }
+
+    .hero-title {
+      margin: 0;
+      text-transform: uppercase;
+      line-height: 0.92;
+      letter-spacing: -0.05em;
+    }
+
+    .hero-title .top,
+    .hero-title .bottom {
+      display: block;
+      font-size: clamp(3rem, 9vw, 6.5rem);
+      font-weight: 1000;
+    }
+
+    .hero-title .bottom {
+      color: var(--accent);
+      text-shadow:
+        0 0 8px rgba(9, 211, 255, 0.95),
+        0 0 22px rgba(9, 211, 255, 0.9),
+        0 0 42px rgba(9, 211, 255, 0.55),
+        0 0 68px rgba(9, 211, 255, 0.35);
+    }
+
+    .hero-subtitle {
+      max-width: 760px;
+      margin: 1.3rem auto 0;
+      color: #e6f7ff;
+      font-size: clamp(1rem, 2vw, 1.24rem);
+      line-height: 1.75;
+      text-align: center;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 1.6rem;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem 1.35rem;
+      border-radius: 14px;
+      border: 1px solid transparent;
+      font-weight: 900;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .button:hover { transform: translateY(-2px); }
+
+    .button.primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #03131d;
+      box-shadow: 0 18px 45px rgba(9, 211, 255, 0.3);
+    }
+
+    .button.secondary {
+      background: rgba(0, 0, 0, 0.34);
+      border-color: rgba(9, 211, 255, 0.72);
+      color: var(--accent);
+      box-shadow: 0 0 20px rgba(9, 211, 255, 0.08);
+    }
+
+    .hero-panel {
+      padding: 1.5rem;
+      border-radius: 26px;
+      background: linear-gradient(180deg, rgba(10,18,31,0.9), rgba(6,11,20,0.74));
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      max-width: 520px;
+      width: 100%;
+    }
+
+    .pill {
+      display: inline-flex;
+      padding: 0.38rem 0.68rem;
+      border-radius: 999px;
+      background: rgba(9, 211, 255, 0.09);
+      border: 1px solid rgba(9, 211, 255, 0.25);
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+    }
+
+    .hero-panel h2 {
+      margin: 0 0 0.7rem;
+      font-size: 2rem;
+      letter-spacing: -0.04em;
+    }
+
+    .hero-panel p {
+      margin: 0 0 1rem;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .panel-list {
+      display: grid;
+      gap: 0.8rem;
+      margin: 1rem 0 1.2rem;
+    }
+
+    .panel-item {
+      padding: 0.95rem 1rem;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--muted);
+    }
+
+    .panel-item strong {
+      color: var(--text);
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+
+    section {
+      position: relative;
+      padding: 5.5rem 0;
+    }
+
+    section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at top, rgba(9, 211, 255, 0.04), transparent 40%);
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.8rem;
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3rem);
+      letter-spacing: -0.04em;
+    }
+
+    .section-title span {
+      color: var(--accent);
+      text-shadow: 0 0 18px rgba(9, 211, 255, 0.28);
+    }
+
+    .section-intro {
+      max-width: 780px;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .grid-3, .grid-2 {
+      display: grid;
+      gap: 1.2rem;
+    }
+
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      padding: 1.45rem;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(135deg, rgba(9, 211, 255, 0.08), transparent 45%);
+    }
+
+    .card > * { position: relative; z-index: 1; }
+    .card h3 { margin: 0 0 0.55rem; font-size: 1.18rem; }
+    .card p, .card li { color: var(--muted); line-height: 1.75; }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+
+    .step {
+      position: relative;
+      padding: 1.3rem;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .step-number {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: rgba(9, 211, 255, 0.1);
+      border: 1px solid rgba(9, 211, 255, 0.25);
+      color: var(--accent);
+      font-weight: 900;
+      margin-bottom: 1rem;
+    }
+
+    .apply-banner {
+      padding: 2rem;
+      border-radius: 28px;
+      background:
+        linear-gradient(135deg, rgba(9,211,255,0.12), rgba(255,188,103,0.08)),
+        rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .apply-banner h2 {
+      margin: 0 0 0.8rem;
+      font-size: clamp(1.8rem, 4vw, 2.7rem);
+      letter-spacing: -0.04em;
+    }
+
+    .apply-banner p {
+      margin: 0 auto 1.4rem;
+      max-width: 70ch;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .footer {
+      padding: 2rem 0 3.5rem;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    @media (max-width: 1120px) {
+      .hero-grid,
+      .grid-3,
+      .grid-2,
+      .steps {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .nav {
+        padding: 0.9rem 0 1rem;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .nav-links { justify-content: flex-start; }
+      .grid-3, .grid-2, .steps { grid-template-columns: 1fr; }
+      .hero-actions { flex-direction: column; }
+      .button, .nav-cta { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html">Crabby's<span>Civilization Experiments</span></a>
+
+      <nav class="nav-links">
+        <a href="index.html">Index</a>
+        <a href="home.html">Home</a>
+        <a class="active" href="apply.html">Apply</a>
+        <a href="staff.html">Staff</a>
+        <a href="rules.html">Rules</a>
+        <a href="faq.html">FAQ</a>
+      </nav>
+
+      <a class="nav-cta" href="#apply-now">Application Hub</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow">Season 4 applications</div>
+          <h1 class="hero-title">
+            <span class="top">Join the</span>
+            <span class="bottom">Experiment</span>
+          </h1>
+          <p class="hero-subtitle">
+            Applications are handled through an external Google Form, but this page is the public entry point for new players. It explains what the application is for, what to expect, and where to go next.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#apply-now">Open application</a>
+            <a class="button secondary" href="rules.html">Read rules first</a>
+          </div>
+        </div>
+
+        <aside class="hero-panel">
+          <div class="pill">Application Status</div>
+          <h2>Season 4 is open</h2>
+          <p>
+            Ready to join? Use the application form to submit your entry for the next season and become part of the next chapter in Crabby's Civilization Experiments.
+          </p>
+          <div class="panel-list">
+            <div class="panel-item">
+              <strong>Application method</strong>
+              Google Form submission
+            </div>
+            <div class="panel-item">
+              <strong>Best for</strong>
+              New players and returning participants
+            </div>
+            <div class="panel-item">
+              <strong>Before applying</strong>
+              Read the rules and be ready with your details
+            </div>
+          </div>
+          <a class="button secondary" href="#apply-now">Go to application area</a>
+        </aside>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title">Why <span>apply</span>?</h2>
+            <p class="section-intro">
+              Joining a season means becoming part of a world shaped by real players. Every applicant has the chance to influence diplomacy, borders, leadership, conflict, and the overall history of the server.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <article class="card">
+            <h3>Enter a living world</h3>
+            <p>Step into a season where the world changes every second, whether it be war, diplomacy or even a new government.</p>
+          </article>
+          <article class="card">
+            <h3>Create your own story</h3>
+            <p>Whether you lead, negotiate, explore, or survive, your role in the experiment helps shape what the season becomes.</p>
+          </article>
+          <article class="card">
+            <h3>Be part of the next era</h3>
+            <p>Every new applicant adds energy, conflict, cooperation, and unpredictability to the next event.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+        <div class="steps">
+          <article class="step">
+            <div class="step-number">01</div>
+            <h3>Read the basics</h3>
+            <p>Get familiar with the server, the current season, and the general expectations before submitting anything.</p>
+          </article>
+          <article class="step">
+            <div class="step-number">02</div>
+            <h3>Check the rules</h3>
+            <p>Make sure you understand the standards, structure, and any gameplay expectations for participants.</p>
+          </article>
+          <article class="step">
+            <div class="step-number">03</div>
+            <h3>Open the form</h3>
+            <p>Use the Google Form link to submit your application details for the season.</p>
+          </article>
+          <article class="step">
+            <div class="step-number">04</div>
+            <h3>Wait for response</h3>
+            <p>After submission, staff can review entries and guide accepted players into the next steps.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="apply-now">
+      <div class="container">
+        <div class="apply-banner">
+          <h2>Application Portal</h2>
+          <p>
+            Applications for Crabby's Civilization Experiments are submitted through a Google Form.
+          </p>
+          <div class="hero-actions" style="justify-content:center; margin-top:0;">
+            <a class="button primary" href="https://forms.gle/ZTS1S8HNUg3dh1Df8" target="_blank" rel="noopener noreferrer">Open Google Form</a>
+            <a class="button secondary" href="faq.html">View FAQ</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title">Before you <span>submit</span></h2>
+            <p class="section-intro">
+              Make sure your application is detailed and presentable.
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <article class="card">
+            <h3>What applicants should know</h3>
+            <ul>
+              <li>Applications are part of entry into the current season.</li>
+              <li>Rules and expectations should be reviewed before submitting.</li>
+              <li>Returning players and new players can both apply.</li>
+              <li>Staff may use the application to organize participants for the event.</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Useful links</h3>
+            <ul>
+              <li><a href="rules.html">Rules page</a></li>
+              <li><a href="faq.html">FAQ page</a></li>
+              <li><a href="staff.html">Staff page</a></li>
+              <li><a href="forms.html">Other forms</a></li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Crabby's Civilization Experiments — Apply page for Season 4 entry and application access.</p>
+    </div>
+  </footer>
+</body>
+</html>
